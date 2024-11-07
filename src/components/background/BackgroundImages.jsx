@@ -7,7 +7,7 @@ const BackgroundImages = ({ totalImages = 8 }) => {
   // 生成圖片陣列，使用 totalImages 參數控制數量
   const images = useMemo(() => {
     return Array.from({ length: totalImages }, (_, i) => 
-      `${baseUrl}/backgrounds/${String(i + 1).padStart(2, '0')}.png`
+      `${baseUrl}/backgrounds/${String(i + 1).padStart(2, '0')}.jpg`
     );
   }, [totalImages]);
 

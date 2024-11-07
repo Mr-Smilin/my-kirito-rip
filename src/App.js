@@ -267,7 +267,7 @@ function App() {
 	return (
 		<div className="snap-y snap-mandatory h-screen overflow-y-auto">
 			{/* 背景圖片層 */}
-			<BackgroundImages totalImages={1} />
+			<BackgroundImages totalImages={7} />
 
 			{/* 彈幕層 */}
 			<div
