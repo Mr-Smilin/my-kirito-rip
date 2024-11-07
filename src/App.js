@@ -79,7 +79,7 @@ function App() {
 		const maxAttempts = 50;
 
 		do {
-			position = 10 + Math.random() * 80;
+			position = 30 + Math.random() * 100;
 			const isSafe = existingPositions.every(
 				(pos) => Math.abs(pos - position) > 8
 			);
