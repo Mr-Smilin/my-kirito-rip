@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/my-kirito-rip/static/css/main.1c685ad9.css",
+    "main.js": "/my-kirito-rip/static/js/main.2303bf4e.js",
+    "static/js/453.74441520.chunk.js": "/my-kirito-rip/static/js/453.74441520.chunk.js",
+    "index.html": "/my-kirito-rip/index.html",
+    "main.1c685ad9.css.map": "/my-kirito-rip/static/css/main.1c685ad9.css.map",
+    "main.2303bf4e.js.map": "/my-kirito-rip/static/js/main.2303bf4e.js.map",
+    "453.74441520.chunk.js.map": "/my-kirito-rip/static/js/453.74441520.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1c685ad9.css",
+    "static/js/main.2303bf4e.js"
+  ]
+}
