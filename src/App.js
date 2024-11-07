@@ -432,33 +432,6 @@ function App() {
 						</Button>
 					</form>
 				</div>
-
-				<div
-					className="absolute bottom-8 cursor-pointer animate-bounce z-20"
-					onClick={() =>
-						document
-							.querySelector(".comment-list")
-							?.scrollIntoView({ behavior: "smooth" })
-					}
-				>
-					<div className="flex flex-col items-center text-gray-500">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M19 14l-7 7m0 0l-7-7m7 7V3"
-							/>
-						</svg>
-						<span className="mt-2">往下滾動查看劍士之碑</span>
-					</div>
-				</div>
 			</section>
 
 			{/* 留言列表區塊 */}
