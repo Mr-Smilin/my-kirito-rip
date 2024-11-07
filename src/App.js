@@ -50,8 +50,8 @@ function App() {
 
 				if (!localData || localStorageService.needsUpdate()) {
 					const apiData = await apiService.initialize();
-					setCount(apiData.count);
-					setComments(apiData.comments);
+					setCount(apiData?.count);
+					setComments(apiData?.comments);
 					localStorageService.setData(apiData);
 				} else {
 					setCount(localData.count);
@@ -101,8 +101,8 @@ function App() {
 				comment,
 				right: -100, // 從右側開始
 				top: safeTop,
-				speed: 0.2 + Math.random() * 0.5,
-				fontSize: Math.floor(Math.random() * (18 - 12 + 1)) + 12,
+				speed: 0.2 + Math.random() * 0.2,
+				fontSize: Math.floor(Math.random() * (28 - 18 + 1)) + 18,
 			};
 		});
 	};
@@ -167,7 +167,7 @@ function App() {
 		});
 
 		// 發送 API 請求
-		apiService.updateCount(newCount).catch(console.error);
+		apiService.incrementCount(newCount).catch(console.error);
 	};
 
 	// 更新表單處理函數，添加字數限制
@@ -284,7 +284,7 @@ function App() {
 							top: `${item.top}%`,
 							transform: "translateZ(0)",
 							fontSize: `${item.fontSize}px`,
-							color: "rgba(59, 130, 246, 0.4)",
+							color: "rgba(59, 130, 246, 0.8)",
 							textShadow: "0 0 1px rgba(0,0,0,0.1)",
 							transition: "right 16ms linear",
 						}}
@@ -305,7 +305,7 @@ function App() {
 							top: `${item.top}%`,
 							transform: "translateZ(0)",
 							fontSize: `${item.fontSize}px`,
-							color: "rgba(59, 130, 246, 0.4)",
+							color: "rgba(59, 130, 246, 0.8)",
 							textShadow: "0 0 1px rgba(0,0,0,0.1)",
 							transition: "right 16ms linear",
 						}}

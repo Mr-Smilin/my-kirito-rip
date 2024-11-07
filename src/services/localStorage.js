@@ -17,8 +17,8 @@ export const localStorageService = {
 	setData(data) {
 		try {
 			const storageData = {
-				count: data.count,
-				comments: data.comments,
+				count: data?.count,
+				comments: data?.comments,
 				lastUpdated: new Date().toISOString(),
 			};
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(storageData));
