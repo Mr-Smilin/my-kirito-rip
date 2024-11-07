@@ -36,7 +36,8 @@ export const localStorageService = {
 		const now = new Date();
 		const hoursDiff = (now - lastUpdated) / (1000 * 60 * 60);
 
-		return hoursDiff > 1;
+		// return hoursDiff > 1;
+		return true;
 	},
 
 	// 獲取儲存的用戶名
