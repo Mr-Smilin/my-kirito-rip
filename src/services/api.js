@@ -1,11 +1,11 @@
-const API_BASE_URL = "your-api-base-url";
+const API_BASE_URL =
+	"https://script.google.com/macros/s/AKfycby5VrVi6Xw53JZMFNa5zXOvHJHnelW_RDnN2j7vjFPwqe3gPc6G50cny5wJvvBFQAqo/exec";
 
-// API 服務
 export const apiService = {
 	// 獲取初始化數據
 	async initialize() {
 		try {
-			const response = await fetch(`${API_BASE_URL}/initialize`);
+			const response = await fetch(`${API_BASE_URL}`);
 			if (!response.ok) throw new Error("初始化失敗");
 			return await response.json();
 		} catch (error) {
@@ -17,12 +17,15 @@ export const apiService = {
 	// 更新計數
 	async updateCount(count) {
 		try {
-			const response = await fetch(`${API_BASE_URL}/count`, {
+			const response = await fetch(`${API_BASE_URL}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ count }),
+				body: JSON.stringify({
+					action: "updateCount",
+					count: count,
+				}),
 			});
 			if (!response.ok) throw new Error("更新計數失敗");
 			return await response.json();
@@ -35,12 +38,15 @@ export const apiService = {
 	// 新增留言
 	async addComment(comment) {
 		try {
-			const response = await fetch(`${API_BASE_URL}/comments`, {
+			const response = await fetch(`${API_BASE_URL}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(comment),
+				body: JSON.stringify({
+					action: "addComment",
+					comment: comment,
+				}),
 			});
 			if (!response.ok) throw new Error("新增留言失敗");
 			return await response.json();
