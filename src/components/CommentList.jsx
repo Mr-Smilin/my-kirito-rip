@@ -13,13 +13,13 @@ const CommentList = ({ comments }) => {
         <Card className="flex-grow overflow-hidden bg-white/80 backdrop-blur-sm">
           <CardHeader className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-10">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">留言列表</h2>
+              <h2 className="text-2xl font-bold">劍士之碑</h2>
               <div className="text-sm text-gray-500">
-                顯示非匿名留言 ({sortedComments.length} 則)
+                顯示SAO玩家的留言 ({sortedComments.length} 則)
               </div>
             </div>
             <p className="text-sm text-gray-500">
-              註：匿名留言不會顯示在此列表中
+              註：匿名的黑漆漆留言不會顯示在此列表中
             </p>
           </CardHeader>
           <CardContent className="overflow-auto h-[calc(100vh-200px)] p-0">

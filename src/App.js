@@ -325,7 +325,7 @@ function App() {
 					className="text-lg px-8 py-6 h-auto z-20"
 					onClick={() => handleCountUpdate(count + 1)}
 				>
-					增加數字
+					上香
 				</Button>
 
 				<div
@@ -456,7 +456,7 @@ function App() {
 								d="M19 14l-7 7m0 0l-7-7m7 7V3"
 							/>
 						</svg>
-						<span className="mt-2">往下滾動查看留言列表</span>
+						<span className="mt-2">往下滾動查看劍士之碑</span>
 					</div>
 				</div>
 			</section>

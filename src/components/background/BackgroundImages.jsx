@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 const BackgroundImages = ({ totalImages = 8 }) => {
+
+    const baseUrl = process.env.PUBLIC_URL || '';
+
   // 生成圖片陣列，使用 totalImages 參數控制數量
   const images = useMemo(() => {
     return Array.from({ length: totalImages }, (_, i) => 
-      `/backgrounds/${String(i + 1).padStart(2, '0')}.png`
+      `${baseUrl}/backgrounds/${String(i + 1).padStart(2, '0')}.png`
     );
   }, [totalImages]);
 
