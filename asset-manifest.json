@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/my-kirito-rip/static/css/main.097c0d35.css",
-    "main.js": "/my-kirito-rip/static/js/main.2fe8b566.js",
+    "main.js": "/my-kirito-rip/static/js/main.9ad917c8.js",
     "static/js/206.ca565149.chunk.js": "/my-kirito-rip/static/js/206.ca565149.chunk.js",
     "index.html": "/my-kirito-rip/index.html"
   },
   "entrypoints": [
     "static/css/main.097c0d35.css",
-    "static/js/main.2fe8b566.js"
+    "static/js/main.9ad917c8.js"
   ]
 }
