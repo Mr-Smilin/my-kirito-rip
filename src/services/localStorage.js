@@ -1,6 +1,7 @@
 const STORAGE_KEY = "kirito-rip-data";
 const USERNAME_KEY = "kirito-rip-username";
 const LAST_INCENSE_KEY = "kirito-rip-last-incense";
+const MUSIC_STATE_KEY = "kirito-rip-music-state";
 const COOLDOWN_DURATION = 3 * 60 * 1000; // 300秒冷卻時間
 
 export const localStorageService = {
@@ -77,5 +78,16 @@ export const localStorageService = {
 		if (username) {
 			localStorage.setItem(USERNAME_KEY, username);
 		}
+	},
+
+	// 獲取音樂狀態
+	getMusicState() {
+		const state = localStorage.getItem(MUSIC_STATE_KEY);
+		return state === null ? true : state === "true"; // 預設開啟
+	},
+
+	// 設置音樂狀態
+	setMusicState(isPlaying) {
+		localStorage.setItem(MUSIC_STATE_KEY, isPlaying.toString());
 	},
 };

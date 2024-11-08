@@ -9,6 +9,7 @@ import { BackgroundImages } from "./components/background/BackgroundImages";
 import { CommentList } from "./components/CommentList";
 import { MarqueeSystem } from "./components/MarqueeSystem";
 import { SAOTransition } from "./components/load/SAOTransition";
+import { BGMPlayer } from "./components/BGMPlayer";
 import { apiService } from "./services/api";
 import { localStorageService } from "./services/localStorage";
 
@@ -335,6 +336,9 @@ function App() {
 
 				{/* 留言列表區塊 */}
 				<CommentList comments={comments} />
+
+				{/* 音樂盒 */}
+				<BGMPlayer />
 			</div>
 		</SAOTransition>
 	);
