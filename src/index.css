@@ -1,7 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+:root {
+  --mk-zero: 0;
+  --mk-seven: 7;
+  --mk-memory: calc(var(--mk-zero)var(--mk-seven));
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -6,6 +6,7 @@ import { MarqueeSystem } from "./components/MarqueeSystem";
 import { IncenseCounter } from "./components/Incense/IncenseCounter";
 import { SAOTransition } from "./components/load/SAOTransition";
 import { BGMPlayer } from "./components/BGMPlayer";
+import { Kirito } from "./components/bouns/EasterEgg";
 import { apiService } from "./services/api";
 import { localStorageService } from "./services/localStorage";
 
@@ -85,6 +86,9 @@ function App() {
 
 				{/* 音樂盒 */}
 				<BGMPlayer defaultPlay={true} />
+
+				{/* 彩蛋 */}
+				<Kirito />
 			</div>
 		</SAOTransition>
 	);
