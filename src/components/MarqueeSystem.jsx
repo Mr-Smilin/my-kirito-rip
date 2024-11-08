@@ -20,7 +20,16 @@ const MarqueeSystem = ({ comments }) => {
 
 	useEffect(() => {
 		if (!comments.length) return;
-		setQueue(comments);
+		// 隨機選擇起始索引
+		const startIndex = Math.floor(Math.random() * comments.length);
+
+		// 重新排序數組，保持相對順序但從新的起點開始
+		const reorderedComments = [
+			...comments.slice(startIndex),
+			...comments.slice(0, startIndex),
+		];
+
+		setQueue(reorderedComments);
 	}, [comments]);
 
 	// 生成唯一ID的輔助函數
