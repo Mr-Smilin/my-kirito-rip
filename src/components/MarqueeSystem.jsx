@@ -191,7 +191,7 @@ const MarqueeSystem = ({ comments }) => {
 				>
 					{item.comment.name
 						? `${item.comment.name}: ${item.comment.content}`
-						: `匿名: ${item.comment.content}`}
+						: `不知名的封弊者: ${item.comment.content}`}
 				</div>
 			))}
 		</div>
