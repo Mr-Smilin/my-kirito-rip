@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
@@ -26,6 +26,10 @@ function App() {
 
 	// 添加用戶名鎖定狀態
 	const [isNameLocked, setIsNameLocked] = useState(false);
+
+	// 上香冷卻
+	const [cooldown, setCooldown] = useState(0);
+	const cooldownTimerRef = useRef(null);
 
 	// 初始化數據
 	useEffect(() => {
@@ -69,7 +73,13 @@ function App() {
 
 	// 更新計數時同時更新 localStorage
 	const handleCountUpdate = (newCount) => {
+		if (!localStorageService.canBurnIncense()) {
+			return; // 如果在冷卻中，直接返回
+		}
+
 		setCount(newCount);
+		localStorageService.setLastIncenseTime();
+		updateCooldown();
 
 		// 更新本地存儲
 		const localData = localStorageService.getData() || { comments: [] };
@@ -170,6 +180,28 @@ function App() {
 		apiService.addComment(newComment).catch(console.error);
 	};
 
+	// 更新冷卻時間的函數
+	const updateCooldown = useCallback(() => {
+		const remaining = localStorageService.getRemainingCooldown();
+		setCooldown(remaining);
+
+		if (remaining > 0) {
+			cooldownTimerRef.current = setTimeout(() => {
+				updateCooldown();
+			}, 1000); // 每秒更新一次
+		} else {
+			clearTimeout(cooldownTimerRef.current);
+		}
+	}, []);
+
+	// 組件掛載時檢查冷卻狀態
+	useEffect(() => {
+		updateCooldown();
+		return () => {
+			clearTimeout(cooldownTimerRef.current);
+		};
+	}, [updateCooldown]);
+
 	if (loading) {
 		return (
 			<div className="h-screen flex items-center justify-center">載入中...</div>
@@ -191,8 +223,9 @@ function App() {
 					size="lg"
 					className="text-lg px-8 py-6 h-auto z-20"
 					onClick={() => handleCountUpdate(count + 1)}
+					disabled={cooldown > 0}
 				>
-					上香
+					{cooldown > 0 ? `冷卻中 (${Math.ceil(cooldown / 1000)}秒)` : "上香"}
 				</Button>
 
 				<div

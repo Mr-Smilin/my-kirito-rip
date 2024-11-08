@@ -1,5 +1,7 @@
 const STORAGE_KEY = "kirito-rip-data";
 const USERNAME_KEY = "kirito-rip-username";
+const LAST_INCENSE_KEY = "kirito-rip-last-incense";
+const COOLDOWN_DURATION = 3 * 60 * 1000; // 300秒冷卻時間
 
 export const localStorageService = {
 	// 從 localStorage 讀取數據
@@ -25,6 +27,32 @@ export const localStorageService = {
 		} catch (error) {
 			console.error("儲存到 localStorage 失敗:", error);
 		}
+	},
+
+	// 儲存最後上香時間
+	setLastIncenseTime() {
+		localStorage.setItem(LAST_INCENSE_KEY, new Date().toISOString());
+	},
+
+	// 檢查是否可以上香
+	canBurnIncense() {
+		const lastIncenseTime = localStorage.getItem(LAST_INCENSE_KEY);
+		if (!lastIncenseTime) return true;
+
+		const lastTime = new Date(lastIncenseTime).getTime();
+		const currentTime = new Date().getTime();
+		return currentTime - lastTime >= COOLDOWN_DURATION;
+	},
+
+	// 獲取剩餘冷卻時間（毫秒）
+	getRemainingCooldown() {
+		const lastIncenseTime = localStorage.getItem(LAST_INCENSE_KEY);
+		if (!lastIncenseTime) return 0;
+
+		const lastTime = new Date(lastIncenseTime).getTime();
+		const currentTime = new Date().getTime();
+		const remaining = COOLDOWN_DURATION - (currentTime - lastTime);
+		return Math.max(0, remaining);
 	},
 
 	// 檢查是否需要更新
