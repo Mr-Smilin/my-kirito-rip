@@ -338,7 +338,7 @@ function App() {
 				<CommentList comments={comments} />
 
 				{/* 音樂盒 */}
-				<BGMPlayer />
+				<BGMPlayer defaultPlay={true} />
 			</div>
 		</SAOTransition>
 	);

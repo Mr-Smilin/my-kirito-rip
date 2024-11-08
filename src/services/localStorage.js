@@ -83,7 +83,7 @@ export const localStorageService = {
 	// 獲取音樂狀態
 	getMusicState() {
 		const state = localStorage.getItem(MUSIC_STATE_KEY);
-		return state === null ? true : state === "true"; // 預設開啟
+		return state === null ? null : state === "true";
 	},
 
 	// 設置音樂狀態

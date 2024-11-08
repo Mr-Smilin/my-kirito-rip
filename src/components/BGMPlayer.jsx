@@ -1,34 +1,61 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import { localStorageService } from "../services/localStorage";
 
-const BGMPlayer = () => {
-	const [isPlaying, setIsPlaying] = useState(false);
-	const audioRef = useRef(null);
-
-	const musicPath = `${process.env.PUBLIC_URL}/music/ed1.mp3`;
-
-	useEffect(() => {
-		// 從 localStorage 讀取初始狀態
+const BGMPlayer = ({ defaultPlay = false }) => {
+	const [isPlaying, setIsPlaying] = useState(() => {
 		const savedState = localStorageService.getMusicState();
-		setIsPlaying(savedState);
-	}, []);
+		return savedState ?? defaultPlay;
+	});
+	const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+	const audioRef = useRef(null);
+	const musicPath = useMemo(
+		() => `${process.env.PUBLIC_URL}/music/ed1.mp3`,
+		[]
+	);
 
+	// 音頻播放狀態管理
 	useEffect(() => {
-		if (audioRef.current) {
-			if (isPlaying) {
-				audioRef.current.play().catch((error) => {
-					// 處理自動播放政策限制
-					console.log("Auto-play prevented:", error);
-					setIsPlaying(false);
-				});
-			} else {
-				audioRef.current.pause();
-			}
-			// 保存狀態到 localStorage
-			localStorageService.setMusicState(isPlaying);
+		const audioElement = audioRef.current;
+		if (!audioElement) return;
+
+		if (isPlaying) {
+			audioElement.play().catch((error) => {
+				console.log("播放失敗:", error);
+				if (error.name === "NotAllowedError") {
+					setAutoplayBlocked(true); // 標記自動播放被阻擋
+				}
+				setIsPlaying(false);
+			});
+		} else {
+			audioElement.pause();
 		}
+
+		localStorageService.setMusicState(isPlaying);
+
+		return () => {
+			audioElement.pause();
+		};
 	}, [isPlaying]);
+
+	// 監聽用戶首次交互
+	useEffect(() => {
+		const handleFirstInteraction = () => {
+			if (autoplayBlocked && defaultPlay) {
+				setIsPlaying(true);
+			}
+			// 移除事件監聽器
+			document.removeEventListener("click", handleFirstInteraction);
+		};
+
+		if (autoplayBlocked) {
+			document.addEventListener("click", handleFirstInteraction);
+		}
+
+		return () => {
+			document.removeEventListener("click", handleFirstInteraction);
+		};
+	}, [autoplayBlocked, defaultPlay]);
 
 	const togglePlay = () => {
 		setIsPlaying((prev) => !prev);
