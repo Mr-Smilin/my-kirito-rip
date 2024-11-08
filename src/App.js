@@ -63,7 +63,7 @@ function App() {
 		<SAOTransition loading={loading}>
 			<div className="snap-y snap-mandatory h-screen overflow-y-auto">
 				{/* 背景圖片層 */}
-				<BackgroundImages totalImages={13} />
+				<BackgroundImages totalImages={14} />
 
 				{/* 彈幕層 */}
 				<MarqueeSystem comments={comments} />
