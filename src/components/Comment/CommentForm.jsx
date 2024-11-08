@@ -59,7 +59,7 @@ export const CommentForm = ({
 
 	const validateForm = () => {
 		if (!isAnonymous && !formData.name.trim()) {
-			setError("非匿名留言需要填寫姓名");
+			setError("非封弊者留言需要填寫姓名");
 			return false;
 		}
 		if (!formData.content.trim()) {
@@ -137,7 +137,7 @@ export const CommentForm = ({
 						checked={isAnonymous}
 						onCheckedChange={setIsAnonymous}
 					/>
-					<Label htmlFor="anonymous">匿名留言</Label>
+					<Label htmlFor="anonymous">封弊者(匿名)留言</Label>
 				</div>
 
 				{!isAnonymous && (

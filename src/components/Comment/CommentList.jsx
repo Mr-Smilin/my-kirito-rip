@@ -19,7 +19,7 @@ const CommentList = ({ comments }) => {
 							</div>
 						</div>
 						<p className="text-sm text-gray-500">
-							註：匿名的黑漆漆留言不會顯示在此列表中
+							註：黑漆漆的封閉者不會顯示在此列表中
 						</p>
 					</CardHeader>
 					<CardContent className="overflow-auto h-[calc(100vh-200px)] p-0">
