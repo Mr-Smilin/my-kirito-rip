@@ -5,7 +5,7 @@ const Kirito = () => {
 	useEffect(() => {
 		if (hasLogged.current) return;
 		hasLogged.current = true;
-		console.log(`        ██ ██                                                                    ███████         █████                     
+		console.info(`        ██ ██                                                                    ███████         █████                     
         ██ ███                                                                  █████████      ███████                     
         ██  ███                                                                ██████████████████████                      
         █    ███                                                              ████████████████████████                     
