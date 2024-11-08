@@ -2,7 +2,7 @@ const STORAGE_KEY = "kirito-rip-data";
 const USERNAME_KEY = "kirito-rip-username";
 const LAST_INCENSE_KEY = "kirito-rip-last-incense";
 const MUSIC_STATE_KEY = "kirito-rip-music-state";
-const COOLDOWN_DURATION = 3 * 60 * 1000; // 300秒冷卻時間
+const COOLDOWN_DURATION = 60 * 1000; // 60秒冷卻時間
 
 export const localStorageService = {
 	// 從 localStorage 讀取數據

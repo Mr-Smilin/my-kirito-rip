@@ -3,10 +3,16 @@ import { Button } from "../ui/button";
 import { localStorageService } from "../../services/localStorage";
 import { apiService } from "../../services/api";
 
+const CLICK_RANGE = 5; // 點擊範圍
+const DELAY_BEFORE_API = 3000; // API 延遲時間 (3秒)
+
 export const IncenseCounter = ({ onScrollToComments, initialCount = 0 }) => {
 	const [count, setCount] = useState(initialCount);
 	const [cooldown, setCooldown] = useState(0);
+	const [clickCount, setClickCount] = useState(0);
 	const cooldownTimerRef = useRef(null);
+	const apiTimerRef = useRef(null);
+	const pendingClicksRef = useRef(0);
 
 	// 監聽 initialCount 的變化
 	useEffect(() => {
@@ -32,19 +38,34 @@ export const IncenseCounter = ({ onScrollToComments, initialCount = 0 }) => {
 		updateCooldown();
 		return () => {
 			clearTimeout(cooldownTimerRef.current);
+			clearTimeout(apiTimerRef.current);
 		};
 	}, [updateCooldown]);
 
+	// 發送 API 請求的函數
+	const sendApiRequest = useCallback(async (clicks) => {
+		try {
+			await apiService.incrementCount(clicks);
+			pendingClicksRef.current = 0; // 重置待發送次數
+		} catch (error) {
+			console.error("增加計數失敗:", error);
+		}
+	}, []);
+
 	// 處理計數更新
 	const handleCountUpdate = () => {
-		if (!localStorageService.canBurnIncense()) {
+		if (cooldown > 0) {
 			return;
 		}
 
+		// 增加點擊計數
+		const newClickCount = clickCount + 1;
+		setClickCount(newClickCount);
+		pendingClicksRef.current += 1;
+
+		// 更新總計數
 		const newCount = count + 1;
 		setCount(newCount);
-		localStorageService.setLastIncenseTime();
-		updateCooldown();
 
 		// 更新本地存儲
 		const localData = localStorageService.getData() || { comments: [] };
@@ -53,8 +74,22 @@ export const IncenseCounter = ({ onScrollToComments, initialCount = 0 }) => {
 			count: newCount,
 		});
 
-		// 發送 API 請求
-		apiService.incrementCount(newCount).catch(console.error);
+		// 清除現有的 API 定時器
+		clearTimeout(apiTimerRef.current);
+
+		// 如果達到點擊範圍
+		if (newClickCount >= CLICK_RANGE) {
+			setClickCount(0); // 重置點擊計數
+			localStorageService.setLastIncenseTime(); // 設置冷卻時間
+			updateCooldown();
+		}
+
+		// 設置新的 API 定時器
+		apiTimerRef.current = setTimeout(() => {
+			if (pendingClicksRef.current > 0) {
+				sendApiRequest(pendingClicksRef.current);
+			}
+		}, DELAY_BEFORE_API);
 	};
 
 	return (
