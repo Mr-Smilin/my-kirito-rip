@@ -124,6 +124,32 @@ module.exports = {
 						opacity: "0",
 					},
 				},
+
+				scan: {
+					"0%": { transform: "translateY(-50%)" },
+					"100%": { transform: "translateY(100%)" },
+				},
+				particle: {
+					"0%": {
+						transform: "translateY(-100vh)",
+						opacity: 1,
+					},
+					"100%": {
+						transform: "translateY(100vh)",
+						opacity: 0,
+					},
+				},
+
+				ripple: {
+					"0%": {
+						transform: "scale(1)",
+						opacity: 1,
+					},
+					"100%": {
+						transform: "scale(100)",
+						opacity: 0,
+					},
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",

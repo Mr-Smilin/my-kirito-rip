@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "./components/ui/alert";
 import { BackgroundImages } from "./components/background/BackgroundImages";
 import { CommentList } from "./components/CommentList";
 import { MarqueeSystem } from "./components/MarqueeSystem";
+import { SAOTransition } from "./components/load/SAOTransition";
 import { apiService } from "./services/api";
 import { localStorageService } from "./services/localStorage";
 
@@ -64,7 +65,10 @@ function App() {
 					setComments(localData.comments);
 				}
 			} finally {
-				setLoading(false);
+				// 增加一個最小載入時間，確保動畫效果明顯
+				setTimeout(() => {
+					setLoading(false);
+				}, 1500); // 至少顯示 1.5 秒載入畫面
 			}
 		};
 
@@ -202,141 +206,137 @@ function App() {
 		};
 	}, [updateCooldown]);
 
-	if (loading) {
-		return (
-			<div className="h-screen flex items-center justify-center">載入中...</div>
-		);
-	}
-
 	return (
-		<div className="snap-y snap-mandatory h-screen overflow-y-auto">
-			{/* 背景圖片層 */}
-			<BackgroundImages totalImages={7} />
+		<SAOTransition loading={loading}>
+			<div className="snap-y snap-mandatory h-screen overflow-y-auto">
+				{/* 背景圖片層 */}
+				<BackgroundImages totalImages={7} />
 
-			{/* 彈幕層 */}
-			<MarqueeSystem comments={comments} />
+				{/* 彈幕層 */}
+				<MarqueeSystem comments={comments} />
 
-			{/* 計數器區塊 */}
-			<section className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white snap-start relative">
-				<div className="text-6xl font-bold mb-8 z-20">{count}</div>
-				<Button
-					size="lg"
-					className="text-lg px-8 py-6 h-auto z-20"
-					onClick={() => handleCountUpdate(count + 1)}
-					disabled={cooldown > 0}
-				>
-					{cooldown > 0 ? `冷卻中 (${Math.ceil(cooldown / 1000)}秒)` : "上香"}
-				</Button>
+				{/* 計數器區塊 */}
+				<section className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white snap-start relative">
+					<div className="text-6xl font-bold mb-8 z-20">{count}</div>
+					<Button
+						size="lg"
+						className="text-lg px-8 py-6 h-auto z-20"
+						onClick={() => handleCountUpdate(count + 1)}
+						disabled={cooldown > 0}
+					>
+						{cooldown > 0 ? `冷卻中 (${Math.ceil(cooldown / 1000)}秒)` : "上香"}
+					</Button>
 
-				<div
-					className="absolute bottom-8 cursor-pointer animate-bounce"
-					onClick={() =>
-						commentSectionRef.current?.scrollIntoView({ behavior: "smooth" })
-					}
-				>
-					<div className="flex flex-col items-center text-gray-500 z-20">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M19 14l-7 7m0 0l-7-7m7 7V3"
-							/>
-						</svg>
-						<span className="mt-2">往下滾動查看留言板</span>
+					<div
+						className="absolute bottom-8 cursor-pointer animate-bounce"
+						onClick={() =>
+							commentSectionRef.current?.scrollIntoView({ behavior: "smooth" })
+						}
+					>
+						<div className="flex flex-col items-center text-gray-500 z-20">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M19 14l-7 7m0 0l-7-7m7 7V3"
+								/>
+							</svg>
+							<span className="mt-2">往下滾動查看留言板</span>
+						</div>
 					</div>
-				</div>
-			</section>
+				</section>
 
-			{/* 留言板區塊 */}
-			<section
-				ref={commentSectionRef}
-				className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-white to-blue-50 snap-start relative overflow-hidden"
-			>
-				{/* 留言表單 */}
-				<div className="relative w-full max-w-md z-20 bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-lg">
-					<form onSubmit={handleSubmit} className="space-y-4">
-						{error && (
-							<Alert variant="destructive">
-								<AlertDescription>{error}</AlertDescription>
-							</Alert>
-						)}
+				{/* 留言板區塊 */}
+				<section
+					ref={commentSectionRef}
+					className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-white to-blue-50 snap-start relative overflow-hidden"
+				>
+					{/* 留言表單 */}
+					<div className="relative w-full max-w-md z-20 bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-lg">
+						<form onSubmit={handleSubmit} className="space-y-4">
+							{error && (
+								<Alert variant="destructive">
+									<AlertDescription>{error}</AlertDescription>
+								</Alert>
+							)}
 
-						<div className="flex items-center space-x-2">
-							<Checkbox
-								id="anonymous"
-								checked={isAnonymous}
-								onCheckedChange={setIsAnonymous}
-							/>
-							<Label htmlFor="anonymous">匿名留言</Label>
-						</div>
+							<div className="flex items-center space-x-2">
+								<Checkbox
+									id="anonymous"
+									checked={isAnonymous}
+									onCheckedChange={setIsAnonymous}
+								/>
+								<Label htmlFor="anonymous">匿名留言</Label>
+							</div>
 
-						{!isAnonymous && (
-							<>
-								<div className="space-y-2">
-									<Label htmlFor="name">
-										姓名 * {isNameLocked && "(已鎖定)"}
-									</Label>
-									<Input
-										id="name"
-										name="name"
-										value={formData.name}
-										onChange={handleInputChange}
-										disabled={isNameLocked}
-										maxLength={8}
-									/>
-									<p className="text-xs text-gray-500">
-										{formData.name.length}/8
-									</p>
-								</div>
+							{!isAnonymous && (
+								<>
+									<div className="space-y-2">
+										<Label htmlFor="name">
+											姓名 * {isNameLocked && "(已鎖定)"}
+										</Label>
+										<Input
+											id="name"
+											name="name"
+											value={formData.name}
+											onChange={handleInputChange}
+											disabled={isNameLocked}
+											maxLength={8}
+										/>
+										<p className="text-xs text-gray-500">
+											{formData.name.length}/8
+										</p>
+									</div>
 
-								<div className="space-y-2">
-									<Label htmlFor="url">URL</Label>
-									<Input
-										id="url"
-										name="url"
-										value={formData.url}
-										onChange={handleInputChange}
-										maxLength={200}
-									/>
-									<p className="text-xs text-gray-500">
-										{formData.url.length}/200
-									</p>
-								</div>
-							</>
-						)}
+									<div className="space-y-2">
+										<Label htmlFor="url">URL</Label>
+										<Input
+											id="url"
+											name="url"
+											value={formData.url}
+											onChange={handleInputChange}
+											maxLength={200}
+										/>
+										<p className="text-xs text-gray-500">
+											{formData.url.length}/200
+										</p>
+									</div>
+								</>
+							)}
 
-						<div className="space-y-2">
-							<Label htmlFor="content">留言內容 *</Label>
-							<Textarea
-								id="content"
-								name="content"
-								value={formData.content}
-								onChange={handleInputChange}
-								rows={4}
-								maxLength={2000}
-							/>
-							<p className="text-xs text-gray-500">
-								{formData.content.length}/2000
-							</p>
-						</div>
+							<div className="space-y-2">
+								<Label htmlFor="content">留言內容 *</Label>
+								<Textarea
+									id="content"
+									name="content"
+									value={formData.content}
+									onChange={handleInputChange}
+									rows={4}
+									maxLength={2000}
+								/>
+								<p className="text-xs text-gray-500">
+									{formData.content.length}/2000
+								</p>
+							</div>
 
-						<Button type="submit" className="w-full">
-							送出留言
-						</Button>
-					</form>
-				</div>
-			</section>
+							<Button type="submit" className="w-full">
+								送出留言
+							</Button>
+						</form>
+					</div>
+				</section>
 
-			{/* 留言列表區塊 */}
-			<CommentList comments={comments} />
-		</div>
+				{/* 留言列表區塊 */}
+				<CommentList comments={comments} />
+			</div>
+		</SAOTransition>
 	);
 }
 
