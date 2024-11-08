@@ -7,6 +7,7 @@ import { Label } from "./components/ui/label";
 import { Alert, AlertDescription } from "./components/ui/alert";
 import { BackgroundImages } from "./components/background/BackgroundImages";
 import { CommentList } from "./components/CommentList";
+import { MarqueeSystem } from "./components/MarqueeSystem";
 import { apiService } from "./services/api";
 import { localStorageService } from "./services/localStorage";
 
@@ -22,12 +23,6 @@ function App() {
 		url: "",
 		content: "",
 	});
-
-	// 彈幕狀態管理
-	const [activeMarqueeSet, setActiveMarqueeSet] = useState(1); // 1 或 2，表示當前活動的彈幕組
-	const [marqueeSet1, setMarqueeSet1] = useState([]); // 第一組彈幕
-	const [marqueeSet2, setMarqueeSet2] = useState([]); // 第二組彈幕
-	const containerRef = useRef(null);
 
 	// 添加用戶名鎖定狀態
 	const [isNameLocked, setIsNameLocked] = useState(false);
@@ -71,89 +66,6 @@ function App() {
 
 		initializeData();
 	}, []);
-
-	// 計算安全的垂直間距
-	const calculateSafePosition = (existingPositions) => {
-		let position;
-		let attempts = 0;
-		const maxAttempts = 50;
-
-		do {
-			position = 10 + Math.random() * 80;
-			const isSafe = existingPositions.every(
-				(pos) => Math.abs(pos - position) > 8
-			);
-
-			if (isSafe || attempts >= maxAttempts) break;
-			attempts++;
-		} while (true);
-
-		return position;
-	};
-
-	// 初始化一組新的彈幕位置
-	const createNewMarqueeSet = (comments) => {
-		const safePositions = [];
-		return comments.map((comment) => {
-			const safeTop = calculateSafePosition(safePositions);
-			safePositions.push(safeTop);
-			return {
-				comment,
-				right: -100, // 從右側開始
-				top: safeTop,
-				speed: 0.2 + Math.random() * 0.2,
-				fontSize: Math.floor(Math.random() * (28 - 18 + 1)) + 18,
-			};
-		});
-	};
-
-	// 初始化彈幕
-	useEffect(() => {
-		if (!comments.length) return;
-
-		// 初始化第一組彈幕
-		setMarqueeSet1(createNewMarqueeSet(comments));
-	}, [comments.length]);
-
-	// 彈幕動畫
-	useEffect(() => {
-		if (!containerRef.current || !comments.length) return;
-
-		const animationFrame = setInterval(() => {
-			if (activeMarqueeSet === 1) {
-				setMarqueeSet1((prev) => {
-					const newSet = prev.map((item) => ({
-						...item,
-						right: item.right + item.speed,
-					}));
-
-					// 調整切換條件，確保彈幕完全離開畫面才切換
-					if (newSet.every((item) => item.right > 100)) {
-						setMarqueeSet2(createNewMarqueeSet(comments));
-						setActiveMarqueeSet(2);
-					}
-
-					return newSet;
-				});
-			} else {
-				setMarqueeSet2((prev) => {
-					const newSet = prev.map((item) => ({
-						...item,
-						right: item.right + item.speed,
-					}));
-
-					if (newSet.every((item) => item.right > 100)) {
-						setMarqueeSet1(createNewMarqueeSet(comments));
-						setActiveMarqueeSet(1);
-					}
-
-					return newSet;
-				});
-			}
-		}, 16);
-
-		return () => clearInterval(animationFrame);
-	}, [activeMarqueeSet, comments]);
 
 	// 更新計數時同時更新 localStorage
 	const handleCountUpdate = (newCount) => {
@@ -270,52 +182,7 @@ function App() {
 			<BackgroundImages totalImages={7} />
 
 			{/* 彈幕層 */}
-			<div
-				ref={containerRef}
-				className="fixed inset-0 pointer-events-none overflow-hidden z-10"
-			>
-				{/* 第一組彈幕 */}
-				{marqueeSet1.map((item) => (
-					<div
-						key={`set1-${item.comment.id}`}
-						className="absolute whitespace-nowrap"
-						style={{
-							right: `${item.right}%`,
-							top: `${item.top}%`,
-							transform: "translateZ(0)",
-							fontSize: `${item.fontSize}px`,
-							color: "rgba(59, 130, 246, 0.8)",
-							textShadow: "0 0 1px rgba(0,0,0,0.1)",
-							transition: "right 16ms linear",
-						}}
-					>
-						{item.comment.name
-							? `${item.comment.name}: ${item.comment.content}`
-							: `匿名: ${item.comment.content}`}
-					</div>
-				))}
-
-				{/* 第二組彈幕 */}
-				{marqueeSet2.map((item) => (
-					<div
-						key={`set2-${item.comment.id}`}
-						className="absolute whitespace-nowrap"
-						style={{
-							right: `${item.right}%`,
-							top: `${item.top}%`,
-							transform: "translateZ(0)",
-							fontSize: `${item.fontSize}px`,
-							color: "rgba(59, 130, 246, 0.8)",
-							textShadow: "0 0 1px rgba(0,0,0,0.1)",
-							transition: "right 16ms linear",
-						}}
-					>
-						{item.comment.name
-							? `${item.comment.name}: ${item.comment.content}`
-							: `匿名: ${item.comment.content}`}
-					</div>
-				))}
-			</div>
+			<MarqueeSystem comments={comments} />
 
 			{/* 計數器區塊 */}
 			<section className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white snap-start relative">
