@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { localStorageService } from "../../services/localStorage";
 import { apiService } from "../../services/api";
 
-const CLICK_RANGE = 5; // 點擊範圍
+const CLICK_RANGE = 100; // 點擊範圍
 const DELAY_BEFORE_API = 3000; // API 延遲時間 (3秒)
 
 export const IncenseCounter = ({ onScrollToComments, initialCount = 0 }) => {
